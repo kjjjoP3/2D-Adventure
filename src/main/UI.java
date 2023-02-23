@@ -92,7 +92,6 @@ public class UI {
 	public void drawPlayerLife() {
 		
 		
-		gp.player.life = 5;
 		
 		int x = gp.tileSize/2;
 		int y = gp.tileSize/2;
@@ -112,7 +111,7 @@ public class UI {
 		 i = 0;
 		 
 		 // DRAW CURRENT LiFE
-		 while(i < gp.player.maxLife) {
+		 while(i < gp.player.life) {
 				g2.drawImage(heart_half, x, y, null);
 				i++;
 				if(i < gp.player.life) {
