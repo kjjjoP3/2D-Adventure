@@ -1,2 +1,2 @@
 # 2D-Adventure
-2D Adventure Project
+Game 2D Adventure Project
