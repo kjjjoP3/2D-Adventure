@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
+import object.OBJ_Fireball;
 import object.OBJ_Key;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
@@ -65,9 +66,7 @@ public class Player extends Entity{
 	public void setDefaultValues() {
 		worldX = gp.tileSize * 23;
 		worldY = gp.tileSize * 21;
-		
-//		worldX = gp.tileSize * 10;
-//		worldY = gp.tileSize * 13;
+		worldY = gp.tileSize * 27;
 		
 		speed = 4;
 		direction = "down";
@@ -83,6 +82,7 @@ public class Player extends Entity{
 		coin = 0;
 		currentWeapon = new OBJ_Sword_Normal(gp);
 		currentShield = new OBJ_Shield_Wood(gp);
+		projectile = new OBJ_Fireball(gp);
 		attack = getAttack(); // THE TOTAL ATTACK VALUE IS DECIDED BY STREENGTH AND WEAPON
 		defense = getDefense(); // THE tOTAL DEFENSE VALUE IS DECIDE bY DEXTERTY AND SHIELLD
 		
@@ -245,6 +245,17 @@ public void getPlayerAttackImage() {
 			}
 		}
 		
+		if(gp.keyH.shotKeyPressed ==  true && projectile.alive == false && shotAvailableCounter == 30) {
+			// SET DEFAULT COORDINATES, DIRECTION AND USER
+			projectile.set(worldX, worldY, direction, true, this);
+			
+			// ADD IT TO THE LIST
+			gp.projectileList.add(projectile);
+			shotAvailableCounter =0;
+			gp.playSE(10);
+			
+		}
+		
 		// this needs to be outside of key if statement!
 		if(invincible == true) {
 			invincibleCounter++;
@@ -252,6 +263,9 @@ public void getPlayerAttackImage() {
 				invincible = false;
 				invincibleCounter = 0;
 			}
+		}
+		if(shotAvailableCounter < 30) {
+			shotAvailableCounter++;
 		}
 	}
 	
@@ -287,12 +301,17 @@ public void getPlayerAttackImage() {
 			
 			// CHECK MONSTER COLLISION WITH THE UPDATED WORLDX, WORLDY, and SOLIAREA
 			int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
-			damageMonster(monsterIndex);
+			damageMonster(monsterIndex,attack);
+			
+			// REVERT TO ORIGINAL SOLID AREA
+			if (spriteCouter == 25) {
+				solidArea.width = solidAreaWidth;
+				solidArea.height = solidAreaHeight;
+				attacking = false;
+			}
+			
 			worldX = currentWorldX;
 			worldY = currentWorldY;
-			solidArea.width = solidAreaWidth;
-			solidArea.height = solidAreaHeight;
-			
 			
 		}
 		if(spriteCouter > 25) {
@@ -300,6 +319,7 @@ public void getPlayerAttackImage() {
 			spriteCouter = 0;
 			attacking = false; 
 		}
+
 		
 	}
 	
@@ -338,7 +358,7 @@ public void getPlayerAttackImage() {
 	public void contactMonster(int i) {
 		if(i != 999) {
 			
-			if(invincible == false) {
+			if(invincible == false && gp.monster[i].dying == false) {
 				gp.playSE(6);
 				
 				int damage = gp.monster[i].attack - defense;
@@ -355,7 +375,7 @@ public void getPlayerAttackImage() {
 	}
 	
 	
-	public void damageMonster(int i) {
+	public void damageMonster(int i, int attack) {
 		if(i != 999) {
 			if(gp.monster[i].invincible == false) {
 				gp.playSE(5);
