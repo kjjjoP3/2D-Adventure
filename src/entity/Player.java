@@ -154,7 +154,7 @@ public void getPlayerAttackImage() {
 			attacking();
 		}
 		
-		if(keyH.upPressed == true || keyH.downPressed == true || 
+		else if(keyH.upPressed == true || keyH.downPressed == true || 
 				keyH.leftPressed == true || keyH.rightPressed == true
 				|| keyH.enterPressed == true
 				) {
