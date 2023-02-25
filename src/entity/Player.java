@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
+import object.OBJ_Axe;
 import object.OBJ_Fireball;
 import object.OBJ_Key;
 import object.OBJ_Rock;
@@ -67,7 +68,7 @@ public class Player extends Entity{
 	public void setDefaultValues() {
 		worldX = gp.tileSize * 23;
 		worldY = gp.tileSize * 21;
-		worldY = gp.tileSize * 27;
+//		worldY = gp.tileSize * 27;
 		
 		speed = 4;
 		direction = "down";
@@ -84,7 +85,8 @@ public class Player extends Entity{
 		exp = 0;
 		nextLevelExp = 5;
 		coin = 0;
-		currentWeapon = new OBJ_Sword_Normal(gp);
+//		currentWeapon = new OBJ_Sword_Normal(gp);
+		currentWeapon = new OBJ_Axe(gp);
 		currentShield = new OBJ_Shield_Wood(gp);
 		projectile = new OBJ_Fireball(gp);
 //		projectile = new OBJ_Rock(gp);
@@ -195,6 +197,9 @@ public void getPlayerAttackImage() {
 			//Check monster COLLISION
 			int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
 			contactMonster(monsterIndex);
+			
+			// CHECK INTERACTIVE TITLE COLLSION
+			int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
 			
 			//CHECK EVENT
 			gp.ehHandler.checkEvent();
@@ -318,6 +323,9 @@ public void getPlayerAttackImage() {
 			int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
 			damageMonster(monsterIndex,attack);
 			
+			int iTileIndex = gp.cChecker.checkEntity(this, gp.iTile);
+			damageInteractiveTile(iTileIndex);
+			
 			// REVERT TO ORIGINAL SOLID AREA
 			if (spriteCouter == 25) {
 				solidArea.width = solidAreaWidth;
@@ -425,6 +433,22 @@ public void getPlayerAttackImage() {
 				}
 				
 			}
+		}
+		
+	}
+	
+	public void damageInteractiveTile(int i) {
+		
+		if(i != 999 && gp.iTile[i].destructible == true && gp.iTile[i].isCorrectItem(this) == true
+			&& gp.iTile[i].invincible == false	
+				) {
+			gp.iTile[i].playSE();
+			gp.iTile[i].life--;
+			gp.iTile[i].invincible = true;
+			if(gp.iTile[i].life == 0) {
+				gp.iTile[i] = gp.iTile[i].getDestroyedForm();
+			}
+			
 		}
 		
 	}
