@@ -16,6 +16,7 @@ import main.KeyHandler;
 import main.UtilityTool;
 import object.OBJ_Fireball;
 import object.OBJ_Key;
+import object.OBJ_Rock;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
 
@@ -77,6 +78,7 @@ public class Player extends Entity{
 		life = maxLife;
 		maxMana = 4;
 		mana = maxMana;
+		ammo = 10;
 		strength = 1; //THE MORE STRENGTH HE HAS, The MORE DAMAGE HE GIVES.
 		dexterity = 1; // THE MORE DEXTERITY HE HAS, THE LESS DAMAGE he REcEIVES
 		exp = 0;
@@ -85,6 +87,7 @@ public class Player extends Entity{
 		currentWeapon = new OBJ_Sword_Normal(gp);
 		currentShield = new OBJ_Shield_Wood(gp);
 		projectile = new OBJ_Fireball(gp);
+//		projectile = new OBJ_Rock(gp);
 		attack = getAttack(); // THE TOTAL ATTACK VALUE IS DECIDED BY STREENGTH AND WEAPON
 		defense = getDefense(); // THE tOTAL DEFENSE VALUE IS DECIDE bY DEXTERTY AND SHIELLD
 		
@@ -247,9 +250,13 @@ public void getPlayerAttackImage() {
 			}
 		}
 		
-		if(gp.keyH.shotKeyPressed ==  true && projectile.alive == false && shotAvailableCounter == 30) {
+		if(gp.keyH.shotKeyPressed ==  true && projectile.alive == false 
+				&& shotAvailableCounter == 30 && projectile.haveResource(this) == true) {
 			// SET DEFAULT COORDINATES, DIRECTION AND USER
 			projectile.set(worldX, worldY, direction, true, this);
+			
+			//SUBTRACT THE COST (MANA< AMMO ETC.
+			projectile.subtractResource(this);
 			
 			// ADD IT TO THE LIST
 			gp.projectileList.add(projectile);
@@ -268,6 +275,12 @@ public void getPlayerAttackImage() {
 		}
 		if(shotAvailableCounter < 30) {
 			shotAvailableCounter++;
+		}
+		if(life > maxLife) {
+			life = maxLife;
+		}
+		if(mana > maxMana) {
+			mana = maxMana;
 		}
 	}
 	
@@ -328,7 +341,16 @@ public void getPlayerAttackImage() {
 	public void pickUpObject(int i) {
 		if(i != 999) {
 			
-			String text;
+			//PICK ONELY ITEMS
+			if(gp.obj[i].type == type_pickupOnly) {
+				gp.obj[i].use(this);
+				gp.obj[i] = null;
+			}
+			
+			// INVENTORY ITEMS
+			
+			else {
+				String text;
 				if(inventory.size() != maxInventorySize) {
 					inventory.add(gp.obj[i]);
 					gp.playSE(1);
@@ -340,7 +362,8 @@ public void getPlayerAttackImage() {
 				}
 				gp.ui.addMessage(text);
 				gp.obj[i] = null;
-				
+			}
+	
 		}
 	}
 	
