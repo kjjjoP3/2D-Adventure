@@ -651,6 +651,8 @@ public class UI {
 		vlolumeWidth = 24 * gp.se.volumeScale;
 		g2.fillRect(textX, textY, vlolumeWidth, 24);
 		
+		gp.config.saveConfig();
+		
 		
 	}
 	
