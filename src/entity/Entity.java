@@ -139,6 +139,45 @@ public class Entity {
 		}
 	}
 	
+	public Color getParticleColor() {
+		Color color = null;
+		return color;
+	}
+	
+	public int getParticleSize() {
+		int size = 0; // 6px
+		return size;
+	}
+	
+	public int getParticleSpeed() {
+		int speed = 0;
+		return speed;
+	}
+	
+	public int getParticleMaxLife() {
+		int maxLife = 0;
+		return maxLife;
+	}
+	
+	public void generateParticle(Entity generator, Entity target) {
+		
+		Color color = generator.getParticleColor();
+		int size = generator.getParticleSize();
+		int speed = generator.getParticleSpeed();
+		int maxLife = generator.getParticleMaxLife();
+		
+		Particle pl = new Particle(gp, target, color, size, speed, maxLife, -2, -1);
+		Particle p2 = new Particle(gp, target, color, size, speed, maxLife, 2, -1);
+		Particle p3 = new Particle(gp, target, color, size, speed, maxLife, -2, 1);
+		Particle p4 = new Particle(gp, target, color, size, speed, maxLife, 2, 1);
+		
+		gp.particleList.add(pl);
+		gp.particleList.add(p2);
+		gp.particleList.add(p3);
+		gp.particleList.add(p4);
+		
+	}
+	
 	public void update() {
 		
 		setAction();
@@ -160,24 +199,13 @@ public class Entity {
 		if(collisionOn == false) {
 			
 			switch (direction) {
-			case "up":
-				worldY -= speed;
-				break;
-			case "down":
-				worldY += speed;
-				break;
-			case "left":
-				worldX -= speed;
-				break;
-			case "right":
-				worldX += speed;
-				break;
-				
+			case "up":worldY -= speed;break;
+			case "down":worldY += speed;break;
+			case "left":worldX -= speed;break;
+			case "right":worldX += speed;break;	
 			}
-			
 		}
-		
-		
+
 		spriteCouter ++;
 		if(spriteCouter > 12) {
 			if(spriteNum == 1) {
@@ -221,13 +249,15 @@ public class Entity {
 	public void draw(Graphics2D g2) {
 		int screenX = worldX - gp.player.worldX + gp.player.screenX;
 		int screenY = worldY - gp.player.worldY + gp.player.screenY;
+		BufferedImage image = null;
+		
 		
 		if(worldX + gp.tileSize> gp.player.worldX - gp.player.screenX &&
 				worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
 				worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
 				worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
 		
-			BufferedImage image = null;
+			
 			switch (direction) {
 		    case "up":
 		        if (spriteNum == 1) {image = up1;} 

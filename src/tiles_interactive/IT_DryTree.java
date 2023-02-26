@@ -1,5 +1,7 @@
 package tiles_interactive;
 
+import java.awt.Color;
+
 import entity.Entity;
 import main.GamePanel;
 
@@ -39,6 +41,27 @@ public void playSE() {
 	public InteractiveTile getDestroyedForm() {
 		InteractiveTile tile = new IT_Trunk(gp, worldX/gp.tileSize, worldY/gp.tileSize);
 		return tile;
+	}
+	
+	
+	public Color getParticleColor() {
+		Color color = new Color(65,50,30);
+		return color;
+	}
+	
+	public int getParticleSize() {
+		int size = 6; // 6px
+		return size;
+	}
+	
+	public int getParticleSpeed() {
+		int speed = 1;
+		return speed;
+	}
+	
+	public int getParticleMaxLife() {
+		int maxLife = 20;
+		return maxLife;
 	}
 
 }

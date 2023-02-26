@@ -31,6 +31,8 @@ public class UI {
 	public int slotCol = 0;
 	public int slotRow = 0;
 	
+	public int subState = 0;
+	
 	public UI(GamePanel gp) {
 		this.gp = gp;
 		
@@ -100,6 +102,12 @@ public class UI {
 		if(gp.gameState == gp.characterState) {
 			drawCharacterScreen();
 			drawInventory();
+		}
+		
+		// OpTIONS STATE
+		
+		if(gp.gameState == gp.optionsState) {
+			drawOptionsScreen();
 		}
 		
 	}
@@ -511,6 +519,47 @@ public class UI {
 			 }
 		 }
 		 
+	}
+	
+	public void drawOptionsScreen() {
+		g2.setColor(Color.white);
+		g2.setFont(g2.getFont().deriveFont(32F));
+		
+		//SUB WinDow
+		
+		 int frameX = gp.tileSize*6;
+		 int frameY = gp.tileSize;
+		 int frameWidth = gp.tileSize*8;
+		 int frameHeight = gp.tileSize*10;
+		 drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+		 
+		 switch (subState) {
+		 case 0: options_top(frameX, frameY); break;
+		 case 1: break;
+		 case 2: break;
+		}
+	
+	}
+	
+	public void options_top(int frameX, int frameY) {
+		
+		int textX;
+		int textY;
+		
+		//TITLE
+		String text = "Options";
+		textX = getXforCenteredText(text);
+		textY = frameY + gp.tileSize;
+		g2.drawString(text, textX, textY);
+		
+		// FULL SCREEN ON/OFF
+		textX = frameX + gp.tileSize;
+		textY += gp.tileSize*2;
+		g2.drawString("Full Screen", textX, textY);
+		
+		
+		// MUSIC
+		
 	}
 	
 	public int getItemIndexOnSlot() {
