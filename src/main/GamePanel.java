@@ -45,6 +45,8 @@ public class GamePanel extends JPanel implements Runnable {
 	BufferedImage tempScreen;
 	Graphics2D g2;
 	
+	public boolean fullScreenOn = false;
+	
 	
 	//FPS
 	int FPS = 60;

@@ -69,7 +69,9 @@ public class KeyHandler implements KeyListener {
 			}
 			if (code == KeyEvent.VK_ENTER) {
 				if (gp.ui.comandNum == 0) {
-					gp.ui.titleScreenState = 1;
+					gp.gameState = gp.playState;
+//					gp.ui.titleScreenState = 1;
+					gp.playMusic(0);
 				}
 				if (gp.ui.comandNum == 1) {
 					// add later
@@ -218,6 +220,55 @@ public class KeyHandler implements KeyListener {
 		}
 		if(code == KeyEvent.VK_ENTER) {
 			enterPressed = true;			
+		}
+		
+		int maxCommancdNum = 0;
+		switch (gp.ui.subState) {
+		case 0: maxCommancdNum = 5; break;
+		case 3: maxCommancdNum = 1; break;
+		}
+		
+		if (code == KeyEvent.VK_W) {
+			gp.ui.comandNum--;
+			gp.playSE(9);
+			if(gp.ui.comandNum < 0) {
+				gp.ui.comandNum = maxCommancdNum;
+			}
+		}
+		if (code == KeyEvent.VK_S) {
+			gp.ui.comandNum ++;
+			gp.playSE(9);
+			if(gp.ui.comandNum > maxCommancdNum) {
+				gp.ui.comandNum = 0;
+			}
+		}
+		
+		if(code == KeyEvent.VK_A) {
+			if(gp.ui.subState == 0) {
+				if(gp.ui.comandNum == 1 && gp.music.volumeScale > 0) {
+					gp.music.volumeScale--;
+					gp.music.checkVolume();
+					gp.playSE(9);
+				}
+				if(gp.ui.comandNum == 2 && gp.se.volumeScale > 0) {
+					gp.se.volumeScale--;
+					gp.playSE(9);
+				}
+			}
+		}
+		
+		if(code == KeyEvent.VK_D) {
+			if(gp.ui.subState == 0) {
+				if(gp.ui.comandNum == 1 && gp.music.volumeScale < 5) {
+					gp.music.volumeScale++;
+					gp.music.checkVolume();
+					gp.playSE(9);
+				}
+				if(gp.ui.comandNum == 2 && gp.se.volumeScale < 5) {
+					gp.se.volumeScale++;
+					gp.playSE(9);
+				}
+			}
 		}
 		
 	}
